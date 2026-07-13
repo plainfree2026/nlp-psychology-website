@@ -3,8 +3,6 @@
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderStats();
-  renderProblems();
   renderPresuppositions();
   renderExperts('global');
   renderToolkit();
