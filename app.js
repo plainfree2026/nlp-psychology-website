@@ -228,7 +228,6 @@ function renderInteractiveTools() {
 function openToolPanel(id, title, icon) {
   document.getElementById('panelIcon').textContent = icon;
   document.getElementById('panelTitle').textContent = title;
-  document.getElementById('toolPanel').classList.add('active');
   const body = document.getElementById('panelBody');
   body.innerHTML = '';
 
@@ -244,11 +243,14 @@ function openToolPanel(id, title, icon) {
     case 'emotion_release': body.innerHTML = renderEmotionRelease(); initEmotionRelease(); break;
     case 'growth_journal': body.innerHTML = renderGrowthJournal(); initGrowthJournal(); break;
   }
-  document.getElementById('interactive').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('toolModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('toolModalContent').scrollTop = 0;
 }
 
 function closeToolPanel() {
-  document.getElementById('toolPanel').classList.remove('active');
+  document.getElementById('toolModal').classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 // ====== 工具1：情绪温度计 ======

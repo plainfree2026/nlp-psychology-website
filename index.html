@@ -100,16 +100,20 @@
       <p>即点即用，在互动中体验NLP的力量</p>
     </div>
     <div class="interactive-grid" id="interactiveGrid"></div>
-    <div class="tool-panel" id="toolPanel">
-      <div class="tool-panel-header">
-        <span class="icon" id="panelIcon"></span>
-        <h3 id="panelTitle"></h3>
-        <button class="back-btn" onclick="closeToolPanel()">← 返回工具列表</button>
-      </div>
-      <div class="tool-panel-body" id="panelBody"></div>
-    </div>
   </div>
 </section>
+
+<!-- ====== 互动工具模态弹窗 ====== -->
+<div class="modal-overlay" id="toolModal" onclick="if(event.target===this)closeToolPanel()">
+  <div class="modal" id="toolModalContent" style="max-width:680px;">
+    <div class="tool-panel-header" style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:20px;border-bottom:2px solid var(--border);position:sticky;top:0;background:var(--bg-card);z-index:1;border-radius:20px 20px 0 0;">
+      <span class="icon" id="panelIcon" style="font-size:32px;"></span>
+      <h3 id="panelTitle" style="font-size:22px;font-weight:700;flex:1;"></h3>
+      <button class="modal-close" onclick="closeToolPanel()" style="position:static;width:36px;height:36px;border-radius:50%;background:var(--bg-soft);border:none;cursor:pointer;font-size:18px;color:var(--text-light);transition:var(--transition);">✕</button>
+    </div>
+    <div class="tool-panel-body" id="panelBody"></div>
+  </div>
+</div>
 
 <!-- ====== 求助通道 ====== -->
 <section class="section" id="help">
