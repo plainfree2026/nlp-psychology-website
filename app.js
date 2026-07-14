@@ -717,7 +717,8 @@ function saveConvertedBelief() {
 function renderBeliefList() {
   return `
     <div>
-      <p style="font-size:15px;color:var(--text-secondary);margin-bottom:24px;">这是最常见的20种限制性信念，以及NLP换框后的赋能版本。看看你中了哪几条？</p>
+      <p style="font-size:15px;color:var(--text-secondary);margin-bottom:8px;">这是最常见的20种限制性信念，以及NLP换框后的赋能版本。涵盖自我价值、掌控选择、失败与完美、人际沟通、成长可能五个维度。</p>
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:24px;">参考：《高效能人士的7个习惯》《沟通的艺术》《重塑心灵》《非暴力沟通》</p>
       <div style="display:flex;flex-direction:column;gap:12px;">
         ${beliefComparisons.map((b,i) => `
           <div style="background:var(--bg-card);border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm);">
@@ -883,6 +884,12 @@ function renderGoalAligner() {
 function show_goalAligner_summary(data, steps, title, msg) {
   const labels = ['🏔️ 身份（我是谁）', '💎 信念/价值观（我相信什么）', '🛠️ 能力（我能做什么）', '🏃 行为（我每天做什么）', '🌍 环境（我在哪里、用什么）'];
   const colors = ['#b86a4a', '#9b7faa', '#7aa89f', '#6faa7a', '#d4896a'];
+  const inputs = [data[0]||'', data[1]||'', data[2]||'', data[3]||'', data[4]||''];
+  const filledCount = inputs.filter(s => s.trim().length > 0).length;
+
+  // 李中莹人设的智能反馈
+  const feedback = generateLiZhongyingFeedback(inputs);
+
   return `
     <div class="result-card">
       <div class="result-icon">🏔️</div>
@@ -891,7 +898,7 @@ function show_goalAligner_summary(data, steps, title, msg) {
       <div style="text-align:left;">
         <div style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:16px;text-align:center;">📋 你的逻辑层次对齐图</div>
         ${labels.map((label, i) => {
-          const content = data[i] || '(未填写)';
+          const content = inputs[i] || '(未填写)';
           return `
             <div style="background:var(--bg-card);border-radius:12px;padding:16px;margin-bottom:10px;border-left:4px solid ${colors[i]};box-shadow:var(--shadow-sm);">
               <div style="font-size:14px;font-weight:700;color:${colors[i]};margin-bottom:8px;">${label}</div>
@@ -900,15 +907,121 @@ function show_goalAligner_summary(data, steps, title, msg) {
           `;
         }).join('')}
       </div>
-      <div style="padding:16px;background:linear-gradient(135deg,#F0FFF4,#E6FFFA);border-radius:12px;margin:16px 0;">
-        <p style="font-size:14px;color:#276749;line-height:1.7;">💡 <strong>检查对齐度：</strong>从上往下看，每一层是否支持上一层？如果身份是"终身学习者"但行为是"每天刷手机4小时"——就不对齐，需要调整行为层。</p>
+
+      <!-- 李中莹反馈 -->
+      <div style="margin:24px 0;border-radius:16px;overflow:hidden;border:2px solid #b86a4a;">
+        <div style="background:linear-gradient(135deg,#b86a4a,#d4896a);padding:16px 20px;display:flex;align-items:center;gap:12px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🧑‍🏫</div>
+          <div>
+            <div style="font-size:16px;font-weight:700;color:#fff;">李中莹的反馈</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.8);">NLP引入中国大陆第一人 · 简快身心积极疗法创始人</div>
+          </div>
+        </div>
+        <div style="background:#faf8f5;padding:20px;">
+          ${feedback}
+        </div>
       </div>
-      <div style="padding:16px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border-radius:12px;margin-bottom:16px;">
-        <p style="font-size:14px;color:var(--primary);font-weight:600;">📌 把这份对齐图截图保存，设为手机壁纸或贴在书桌前。每天看一眼，检查自己的行为是否还在轨道上。</p>
+
+      <div style="padding:16px;background:linear-gradient(135deg,#F0FFF4,#E6FFFA);border-radius:12px;margin:16px 0;">
+        <p style="font-size:14px;color:#276749;line-height:1.7;">💡 <strong>建议：</strong>把这份对齐图和老师反馈截图保存。每天看一眼，检查自己的行为是否还在轨道上。</p>
       </div>
       <button class="btn btn-secondary" onclick="closeToolPanel()">完成</button>
     </div>
   `;
+}
+
+// 李中莹人设反馈生成器
+function generateLiZhongyingFeedback(inputs) {
+  const [identity, belief, capability, behavior, environment] = inputs;
+  const filled = inputs.filter(s => s.trim().length > 0).length;
+  let feedback = '';
+
+  // 1. 整体评价
+  if (filled < 3) {
+    feedback += `<p style="margin:0 0 12px;font-size:15px;color:var(--text);line-height:1.8;">你填了${filled}层，还有${5-filled}层没填。没关系，有些层暂时想不清楚是正常的。但我想问你——你今天愿意花时间来做这件事，说明你心里有一个声音在说"我想变得更好"。对不对？<strong style="color:#b86a4a;">那个声音，就是你的自我价值在敲门。</strong></p>`;
+  } else if (filled === 5) {
+    feedback += `<p style="margin:0 0 12px;font-size:15px;color:var(--text);line-height:1.8;">五层都填了，好。你比我很多学员认真。但我不是来夸你的——我是来帮你看看，你写的这五层，是不是真的"通"了。</p>`;
+  } else {
+    feedback += `<p style="margin:0 0 12px;font-size:15px;color:var(--text);line-height:1.8;">好，你填了${filled}层。我们一层一层来看。</p>`;
+  }
+
+  // 2. 身份层分析
+  if (identity.trim()) {
+    const id = identity.trim();
+    // 检查是否用了职业/角色而非身份
+    if (/员|师|生|理|工|人|主|导|裁|员/.test(id) && !/一个|的人|者/.test(id)) {
+      feedback += `<div style="padding:12px;background:#fff;border-radius:8px;margin-bottom:10px;border-left:3px solid #b86a4a;">
+        <div style="font-size:13px;font-weight:700;color:#b86a4a;margin-bottom:4px;">关于「身份」层：</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">你写的是"${id}"。我想提醒你——职业不是身份。程序员会转行，老板会破产，学生会毕业。如果你把身份绑在职业上，职业没了你也就没了。<strong style="color:#b86a4a;">身份是"你是谁"，不是"你做什么"。</strong>试着重新想想：剥掉所有头衔之后，你是一个什么样的人？</p>
+      </div>`;
+    } else if (/完美|优秀|成功/.test(id)) {
+      feedback += `<div style="padding:12px;background:#fff;border-radius:8px;margin-bottom:10px;border-left:3px solid #b86a4a;">
+        <div style="font-size:13px;font-weight:700;color:#b86a4a;margin-bottom:4px;">关于「身份」层：</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">你想成为"${id}"。我理解你的追求，但注意——"完美""优秀"这些词本身就是一个陷阱。如果你的身份是"完美的人"，那你每次不完美的时候，身份就崩了。<strong style="color:#b86a4a;">试着把身份从"结果"转向"过程"——比如"一个持续成长的人"。</strong></p>
+      </div>`;
+    } else {
+      feedback += `<div style="padding:12px;background:#fff;border-radius:8px;margin-bottom:10px;border-left:3px solid #6faa7a;">
+        <div style="font-size:13px;font-weight:700;color:#6faa7a;margin-bottom:4px;">关于「身份」层 ✅</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">"${id}"——这个身份不错。它不依赖于外部条件，是你随时可以选择成为的存在状态。记住NLP的一条前提假设：<strong>"每个人都已经具备使自己成功快乐的资源。"</strong>你需要的不是变成另一个人，而是让这个身份在每一层都活出来。</p>
+      </div>`;
+    }
+  }
+
+  // 3. 信念层分析
+  if (belief.trim()) {
+    const bl = belief.trim();
+    if (/必须|应该|不能|不可以|一定要/.test(bl)) {
+      feedback += `<div style="padding:12px;background:#fff;border-radius:8px;margin-bottom:10px;border-left:3px solid #c97a7a;">
+        <div style="font-size:13px;font-weight:700;color:#c97a7a;margin-bottom:4px;">关于「信念」层 ⚠️</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">你的信念里有"必须""应该""不能"这类词。这些叫<strong style="color:#c97a7a;">规则性信念</strong>——它们像锁链一样绑住你。NLP说："动机和情绪总不会错，只是行为没有效果而已。"你的动机是好的，但用"必须"来逼自己，效果往往不好。试着把"必须"换成"选择"——"我选择相信…"，感受一下区别。</p>
+      </div>`;
+    } else if (/成长|学习|可能|选择|接纳/.test(bl)) {
+      feedback += `<div style="padding:12px;background:#fff;border-radius:8px;margin-bottom:10px;border-left:3px solid #6faa7a;">
+        <div style="font-size:13px;font-weight:700;color:#6faa7a;margin-bottom:4px;">关于「信念」层 ✅</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">你的信念里有"成长""可能""选择"这些词——很好。这些都是<strong style="color:#6faa7a;">赋能型信念</strong>。继续强化它们。NLP有一条假设叫"有效果比有道理更重要"——如果这些信念让你活得更好，那就是对的。</p>
+      </div>`;
+    } else {
+      feedback += `<div style="padding:12px;background:#fff;border-radius:8px;margin-bottom:10px;border-left:3px solid #d4896a;">
+        <div style="font-size:13px;font-weight:700;color:#d4896a;margin-bottom:4px;">关于「信念」层：</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">你写的信念是"${bl}"。问自己一个问题：<strong style="color:#b86a4a;">这个信念是在支持你，还是在限制你？</strong>如果答案是后者，你需要用我们网站的「信念转换器」把它翻过来。</p>
+      </div>`;
+    }
+  }
+
+  // 4. 对齐度检查
+  if (identity.trim() && behavior.trim()) {
+    const id = identity.trim();
+    const beh = behavior.trim();
+    // 简单的语义冲突检测
+    const idHasGrowth = /成长|学习|进步|探索|创造/.test(id);
+    const behHasPassive = /刷手机|打游戏|躺|睡|拖延|发呆|追剧/.test(beh);
+    if (idHasGrowth && behHasPassive) {
+      feedback += `<div style="padding:12px;background:#fff0f0;border-radius:8px;margin-bottom:10px;border-left:3px solid #c97a7a;">
+        <div style="font-size:13px;font-weight:700;color:#c97a7a;margin-bottom:4px;">⚠️ 对齐度警报</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">你的身份是"${id}"，但你的行为里有"${beh}"。这就是<strong style="color:#c97a7a;">不对齐</strong>——上层说要成长，下层在躺平。内耗就是这么来的。NLP说："重复旧的做法，只会得到旧的结果。"你需要从行为层开始改。不需要大改——把每天30分钟刷手机换成30分钟阅读，就是对齐的第一步。</p>
+      </div>`;
+    } else {
+      feedback += `<div style="padding:12px;background:#f0f9f0;border-radius:8px;margin-bottom:10px;border-left:3px solid #6faa7a;">
+        <div style="font-size:13px;font-weight:700;color:#6faa7a;margin-bottom:4px;">对齐度检查 ✅</div>
+        <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.7;">你的身份和行为看起来是往同一个方向走的。很好。继续问自己：<strong style="color:#6faa7a;">这些行为是否足够支撑你想成为的那个人？</strong>如果还不够，加一个。一个就够。</p>
+      </div>`;
+    }
+  }
+
+  // 5. 三赢检查
+  if (filled >= 3) {
+    feedback += `<div style="padding:16px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border-radius:12px;margin-bottom:10px;">
+      <div style="font-size:14px;font-weight:700;color:#b86a4a;margin-bottom:8px;">🤝 三赢检查</div>
+      <p style="margin:0;font-size:14px;color:var(--text-secondary);line-height:1.8;">最后我想问你一个问题——你设定的这个目标，是"<strong style="color:#b86a4a;">我好、你好、世界好</strong>"的吗？<br><br>如果只对你好但对别人不好——迟早会反噬。<br>如果对别人好但对你不好——你撑不住。<br>如果对你和身边人好但对社会无益——能量会慢慢消耗。<br><br>真正的对齐，是五个层次加上三赢，全部指向同一个方向。你觉得你的目标满足三赢吗？如果不满足，回去调整一下。调整之后，你会发现行动力自动就上来了——因为你不再内耗了。</p>
+    </div>`;
+  }
+
+  // 6. 收尾
+  feedback += `<div style="padding:14px;background:#fff;border-radius:8px;border:1px dashed #b86a4a;">
+    <p style="margin:0;font-size:14px;color:var(--text);line-height:1.8;">最后一句话送给你——<strong style="color:#b86a4a;">"有效果比有道理更重要。"</strong>这份对齐图不是用来"想通"的，是用来"做到"的。今天就开始，做一件跟你的身份层对齐的事。哪怕只是一件小事。<br><br>做完了，你会发现——你本来就有这个能力。你只是忘了。</p>
+  </div>`;
+
+  return feedback;
 }
 
 // ====== 工具9：情绪释放引导 ======
