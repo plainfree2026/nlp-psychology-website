@@ -651,7 +651,7 @@ img { max-width: 100%; display: block; }
 <!-- ====== Hero ====== -->
 <section class="hero" id="hero">
   <div class="hero-content">
-    <div class="hero-badge">🌍 全球30位NLP专家 · 10种自助方法 · 10种互动工具</div>
+    <div class="hero-badge">🌍 全球30位NLP专家 · 10种自助方法 · 12种互动工具</div>
     <h1>用心理学的力量<br>点亮每一个被困住的心灵</h1>
     <p>面向所有曾经或正在经历迷茫、焦虑、停滞的人<br>基于NLP（神经语言程序学）与积极心理学<br>提供系统化、可操作的自助成长方案</p>
     <div class="hero-buttons">
@@ -718,7 +718,7 @@ img { max-width: 100%; display: block; }
   <div class="section-inner">
     <div class="section-header">
       <span class="section-tag">🎮 互动工具</span>
-      <h2>10种互动心理工具</h2>
+      <h2>12种互动心理工具</h2>
       <p>即点即用，在互动中体验NLP的力量</p>
     </div>
     <div class="interactive-grid" id="interactiveGrid"></div>
@@ -1329,11 +1329,39 @@ const interactiveTools = [
   { id:"reframe_lab", title:"换框练习器", icon:"🖼️", desc:"把负面想法翻转成积极视角", type:"guided" },
   { id:"perceptual_wheel", title:"感知位置轮盘", icon:"🔄", desc:"三把椅子三种视角，化解人际冲突", type:"guided" },
   { id:"belief_detector", title:"信念检测器", icon:"🔍", desc:"用元模型破解'我做不到'类限制性信念", type:"assessment" },
+  { id:"belief_converter", title:"信念转换器", icon:"🔄", desc:"输入限制性信念，自动转换为赋能信念", type:"assessment" },
+  { id:"belief_list", title:"20种信念对照表", icon:"📋", desc:"最常见的20种限制性vs赋能信念对比", type:"reference" },
   { id:"timeline_visual", title:"时间线可视化", icon:"📅", desc:"绘制你的个人时间线，释放过去", type:"canvas" },
   { id:"self_talk", title:"自我对话模拟器", icon:"💬", desc:"练习NLP式的积极自我对话", type:"chat" },
   { id:"goal_aligner", title:"目标锚定器", icon:"🏔️", desc:"用逻辑层次模型设定对齐的目标", type:"guided" },
   { id:"emotion_release", title:"情绪释放引导", icon:"🌊", desc:"引导式逐步抽离，从情绪中退后一步", type:"guided" },
   { id:"growth_journal", title:"每日成长日记", icon:"📓", desc:"NLP格式日记，记录每日成长", type:"journal" }
+];
+
+// ------------------------------------------------------------
+// 8. 20种常见限制性信念 vs 赋能信念对照表
+// ------------------------------------------------------------
+const beliefComparisons = [
+  { limiting:"我永远学不好这个。", empowering:"这个知识点我还需要多练习，上次XX部分我就做得不错。" },
+  { limiting:"我太笨了，什么都做不好。", empowering:"我正在学习，每个人节奏不同，我已经在进步了。" },
+  { limiting:"没有人会喜欢我。", empowering:"不是所有人都会喜欢我，但真正懂我的人会留下。" },
+  { limiting:"我做不到的，别试了。", empowering:"我还没找到方法，不代表做不到，先试试再说。" },
+  { limiting:"一切都是我的错。", empowering:"这件事我有部分责任，但也有很多因素不在我的控制范围内。" },
+  { limiting:"如果我失败了，就全完了。", empowering:"失败是反馈信息，告诉我这条路需要调整，不是终点。" },
+  { limiting:"我不够好，配不上好的。", empowering:"我的价值不取决于某一次表现，我值得被善待。" },
+  { limiting:"改变太难了，我不可能改变。", empowering:"改变不需要一步到位，今天做一点就是开始。" },
+  { limiting:"别人都比我强，我比不上。", empowering:"每个人都有自己的节奏和优势，我只需要和昨天的自己比。" },
+  { limiting:"过去的事情决定了我的现在。", empowering:"过去影响了我，但不定义我，我此刻可以选择不同的回应。" },
+  { limiting:"我必须完美，否则就是失败。", empowering:"完成比完美更重要，60分的行动比0分的空想有价值。" },
+  { limiting:"表达需求就是自私。", empowering:"表达需求是健康的自我尊重，压抑才会出问题。" },
+  { limiting:"我不能犯错。", empowering:"犯错是学习的必经之路，不犯错说明没在尝试新东西。" },
+  { limiting:"我天生就是这样的，改不了。", empowering:"性格可以调整，习惯可以重建，大脑是可塑的。" },
+  { limiting:"如果我放松了，一切都会崩塌。", empowering:"适当休息不会让事情变糟，反而能让我更有能量应对。" },
+  { limiting:"没有人能理解我。", empowering:"也许我还没遇到对的人，也许我需要先学会表达自己。" },
+  { limiting:"我这辈子就这样了。", empowering:"人生很长，转折随时可能发生，只要我不放弃探索。" },
+  { limiting:"别人怎么看我最重要。", empowering:"别人怎么看是别人的事，我怎么看自己才决定我的生活质量。" },
+  { limiting:"我不值得被爱。", empowering:"被爱不需要条件，我先爱自己，才会吸引对的人。" },
+  { limiting:"努力也没用，结果不会变。", empowering:"结果不是我能完全控制的，但努力本身已经在改变我。" }
 ];
 
 </script>
@@ -1572,16 +1600,18 @@ function openToolPanel(id, title, icon) {
   body.innerHTML = '';
 
   switch(id) {
-    case 'mood_meter': body.innerHTML = renderMoodMeter(); initMoodMeter(); break;
-    case 'anchor_builder': body.innerHTML = renderAnchorBuilder(); initAnchorBuilder(); break;
-    case 'reframe_lab': body.innerHTML = renderReframeLab(); initReframeLab(); break;
-    case 'perceptual_wheel': body.innerHTML = renderPerceptualWheel(); initPerceptualWheel(); break;
-    case 'belief_detector': body.innerHTML = renderBeliefDetector(); initBeliefDetector(); break;
-    case 'timeline_visual': body.innerHTML = renderTimelineVisual(); initTimelineVisual(); break;
-    case 'self_talk': body.innerHTML = renderSelfTalk(); initSelfTalk(); break;
-    case 'goal_aligner': body.innerHTML = renderGoalAligner(); initGoalAligner(); break;
-    case 'emotion_release': body.innerHTML = renderEmotionRelease(); initEmotionRelease(); break;
-    case 'growth_journal': body.innerHTML = renderGrowthJournal(); initGrowthJournal(); break;
+    case 'mood_meter': body.innerHTML = renderBreathingPrompt() + renderMoodMeter(); initMoodMeter(); break;
+    case 'anchor_builder': body.innerHTML = renderBreathingPrompt() + renderAnchorBuilder(); initAnchorBuilder(); break;
+    case 'reframe_lab': body.innerHTML = renderBreathingPrompt() + renderReframeLab(); initReframeLab(); break;
+    case 'perceptual_wheel': body.innerHTML = renderBreathingPrompt() + renderPerceptualWheel(); initPerceptualWheel(); break;
+    case 'belief_detector': body.innerHTML = renderBreathingPrompt() + renderBeliefDetector(); initBeliefDetector(); break;
+    case 'belief_converter': body.innerHTML = renderBreathingPrompt() + renderBeliefConverter(); initBeliefConverter(); break;
+    case 'belief_list': body.innerHTML = renderBeliefList(); break;
+    case 'timeline_visual': body.innerHTML = renderBreathingPrompt() + renderTimelineVisual(); initTimelineVisual(); break;
+    case 'self_talk': body.innerHTML = renderBreathingPrompt() + renderSelfTalk(); initSelfTalk(); break;
+    case 'goal_aligner': body.innerHTML = renderBreathingPrompt() + renderGoalAligner(); initGoalAligner(); break;
+    case 'emotion_release': body.innerHTML = renderBreathingPrompt() + renderEmotionRelease(); initEmotionRelease(); break;
+    case 'growth_journal': body.innerHTML = renderBreathingPrompt() + renderGrowthJournal(); initGrowthJournal(); break;
   }
   document.getElementById('toolModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1591,6 +1621,106 @@ function openToolPanel(id, title, icon) {
 function closeToolPanel() {
   document.getElementById('toolModal').classList.remove('active');
   document.body.style.overflow = '';
+}
+
+// ====== 呼吸提示（NLP 4-7-8 呼吸法） ======
+function renderBreathingPrompt() {
+  return `
+    <div id="breathingPrompt" style="background:linear-gradient(135deg,#EBF8FF,#E0E7FF);border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid #BEE3F8;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-size:28px;">🫁</span>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#2A4365;">开始之前，先做3次深呼吸</div>
+          <div style="font-size:13px;color:#4A6FA5;">NLP建议：吸气4秒 → 屏息7秒 → 呼气8秒，帮助大脑进入最佳接收状态</div>
+        </div>
+      </div>
+      <div id="breathingAnim" style="display:none;text-align:center;padding:20px 0;">
+        <div id="breathCircle" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#5B7FFF,#00C4A7);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;transition:transform 4s ease-in-out,background 4s;">准备</div>
+        <div id="breathText" style="font-size:15px;color:#2A4365;font-weight:600;">点击下方按钮开始</div>
+        <div id="breathCount" style="font-size:13px;color:#4A6FA5;margin-top:8px;">已完成 0/3 次</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" style="flex:1;padding:10px 20px;font-size:14px;" onclick="startBreathing()">开始呼吸练习</button>
+        <button class="btn btn-secondary" style="padding:10px 20px;font-size:14px;" onclick="document.getElementById('breathingPrompt').style.display='none'">跳过，直接开始 →</button>
+      </div>
+    </div>
+  `;
+}
+
+let breathTimer = null;
+let breathCount = 0;
+function startBreathing() {
+  const anim = document.getElementById('breathingAnim');
+  const circle = document.getElementById('breathCircle');
+  const text = document.getElementById('breathText');
+  const count = document.getElementById('breathCount');
+  anim.style.display = 'block';
+  breathCount = 0;
+
+  const phases = [
+    { label: '吸气', duration: 4000, scale: 1.4, color: '#5B7FFF' },
+    { label: '屏息', duration: 7000, scale: 1.4, color: '#9b7faa' },
+    { label: '呼气', duration: 8000, scale: 0.8, color: '#00C4A7' }
+  ];
+
+  let phaseIdx = 0;
+  function nextPhase() {
+    if (breathCount >= 3) {
+      text.textContent = '✅ 呼吸完成，感觉好些了吗？';
+      count.textContent = '已完成 3/3 次';
+      circle.style.transform = 'scale(1)';
+      circle.style.background = '#6faa7a';
+      circle.textContent = '✓';
+      clearInterval(breathTimer);
+      setTimeout(() => {
+        const prompt = document.getElementById('breathingPrompt');
+        if (prompt) prompt.style.display = 'none';
+      }, 1500);
+      return;
+    }
+    const phase = phases[phaseIdx];
+    circle.textContent = phase.label;
+    circle.style.transition = `transform ${phase.duration/1000}s ease-in-out, background ${phase.duration/1000}s`;
+    circle.style.transform = `scale(${phase.scale})`;
+    circle.style.background = phase.color;
+    text.textContent = `${phase.label}中…`;
+    phaseIdx = (phaseIdx + 1) % 3;
+    if (phaseIdx === 0) {
+      breathCount++;
+      count.textContent = `已完成 ${breathCount}/3 次`;
+    }
+  }
+  nextPhase();
+  breathTimer = setInterval(nextPhase, 1);
+  // 用 setTimeout 链替代 setInterval 精确控制
+  clearInterval(breathTimer);
+  function runPhase() {
+    if (breathCount >= 3) {
+      text.textContent = '✅ 呼吸完成，现在你处于最佳状态';
+      count.textContent = '已完成 3/3 次';
+      circle.style.transform = 'scale(1)';
+      circle.style.background = '#6faa7a';
+      circle.textContent = '✓';
+      setTimeout(() => {
+        const prompt = document.getElementById('breathingPrompt');
+        if (prompt) prompt.style.display = 'none';
+      }, 1500);
+      return;
+    }
+    const phase = phases[phaseIdx];
+    circle.textContent = phase.label;
+    circle.style.transition = `transform ${phase.duration/1000}s ease-in-out, background ${phase.duration/1000}s`;
+    circle.style.transform = `scale(${phase.scale})`;
+    circle.style.background = phase.color;
+    text.textContent = `${phase.label}中…`;
+    phaseIdx = (phaseIdx + 1) % 3;
+    if (phaseIdx === 0) breathCount++;
+    count.textContent = `已完成 ${breathCount}/3 次`;
+    setTimeout(runPhase, phase.duration);
+  }
+  breathCount = 0;
+  phaseIdx = 0;
+  runPhase();
 }
 
 // ====== 工具1：情绪温度计 ======
@@ -1723,11 +1853,11 @@ function scrollToToolkit(toolId) {
 // ====== 工具2：心锚设置器 ======
 function renderAnchorBuilder() {
   const steps = [
-    { title: '第一步：选择目标状态', desc: '你想通过心锚触发什么状态？（如：自信、平静、专注、快乐）', input: true, placeholder: '例如：考试前的自信状态' },
-    { title: '第二步：回忆巅峰时刻', desc: '回忆一个你完全处于这种状态的时刻。越具体越好——你在哪里？看到了什么？听到了什么？感受到了什么？', input: true, placeholder: '详细描述那个场景...' },
+    { title: '第一步：选择目标状态', desc: '你想通过心锚触发什么状态？（如：自信、平静、专注、快乐）', input: true, placeholder: '例如：考试前的自信状态', hint: '想一个你最需要的场景——考试前？演讲前？跟人吵架后？选定一个具体的状态。' },
+    { title: '第二步：回忆巅峰时刻', desc: '回忆一个你完全处于这种状态的时刻。越具体越好——你在哪里？看到了什么？听到了什么？感受到了什么？', input: true, placeholder: '详细描述那个场景...', hint: '用5感来回忆：视觉（看到什么）、听觉（听到什么）、身体感觉（温度、触感）。越详细，记忆越真实，效果越强。' },
     { title: '第三步：选择心锚动作', desc: '选择一个独特、你平时不会做的身体动作。这将是你的"触发开关"。', input: false, options: ['握紧右拳3秒', '按住左手腕内侧', '深呼吸同时触摸右耳垂', '双手交叉拍肩膀', '自定义动作（请在下方描述）'] },
     { title: '第四步：设定心锚', desc: '现在闭上眼睛，充分沉浸在那个巅峰记忆中。当感受最强烈时，执行你选择的心锚动作，保持2-3秒。', input: false, info: true },
-    { title: '第五步：测试心锚', desc: '打破状态（想些无关的事），然后做心锚动作。感受是否自动出现？如果没有，重复步骤2-4。', input: true, placeholder: '测试结果如何？感受出现了吗？' },
+    { title: '第五步：测试心锚', desc: '打破状态（想些无关的事），然后做心锚动作。感受是否自动出现？如果没有，重复步骤2-4。', input: true, placeholder: '测试结果如何？感受出现了吗？', hint: '如果没有立即出现也没关系——心锚需要重复3-5次才能牢固。写下你的真实测试感受。' },
   ];
   return renderGuidedTool('anchorBuilder', steps, '心锚已设定', '记住在接下来的7天里，每天至少练习3次你的心锚。当你在真实情境中需要那种状态时，做心锚动作即可触发它。');
 }
@@ -1735,11 +1865,11 @@ function renderAnchorBuilder() {
 // ====== 工具3：换框练习器 ======
 function renderReframeLab() {
   const steps = [
-    { title: '第一步：写出困扰你的想法', desc: '用一句话描述让你困扰的事件或想法。', input: true, placeholder: '例如：我考试又考砸了，我太笨了' },
-    { title: '第二步：情境换框', desc: '在什么情况下，这件事会有积极意义？', input: true, placeholder: '例如：这次失败让我提前发现了知识漏洞' },
-    { title: '第三步：意义换框', desc: '这件事还能意味着什么？写出至少3个不同的解读。', input: true, placeholder: '1. ...\n2. ...\n3. ...' },
-    { title: '第四步：行为换框', desc: '这种负面反应背后的正面动机是什么？', input: true, placeholder: '例如：感到挫败是因为我在乎自己的未来' },
-    { title: '第五步：选择新框架', desc: '从上面的新解读中，选择一个让你感觉最好的。把它写成新的陈述句。', input: true, placeholder: '你的新陈述...' },
+    { title: '第一步：写出困扰你的想法', desc: '用一句话描述让你困扰的事件或想法。', input: true, placeholder: '例如：我考试又考砸了，我太笨了', hint: '写出你脑子里真实出现的那句话，不要修饰。越真实，换框效果越好。' },
+    { title: '第二步：情境换框', desc: '在什么情况下，这件事会有积极意义？', input: true, placeholder: '例如：这次失败让我提前发现了知识漏洞', hint: '问自己：这件事在什么时间、什么场景下反而是好事？例如"幸好现在发现了，而不是高考时才发现"。' },
+    { title: '第三步：意义换框', desc: '这件事还能意味着什么？写出至少3个不同的解读。', input: true, placeholder: '1. ...\n2. ...\n3. ...', hint: '强迫自己写出3个完全不同的角度。例如：① 这是一次学习机会 ② 这让我更了解自己的弱点 ③ 这证明我还在尝试而不是放弃。' },
+    { title: '第四步：行为换框', desc: '这种负面反应背后的正面动机是什么？', input: true, placeholder: '例如：感到挫败是因为我在乎自己的未来', hint: '每个负面情绪都有一个正面意图。焦虑=在乎、愤怒=边界被侵犯、悲伤=重视失去的东西。找到那个正面意图。' },
+    { title: '第五步：选择新框架', desc: '从上面的新解读中，选择一个让你感觉最好的。把它写成新的陈述句。', input: true, placeholder: '你的新陈述...', hint: '好的新框架应该让你身体感到更轻松。如果写完没有身体变化，换一个角度再试。' },
   ];
   return renderGuidedTool('reframeLab', steps, '换框完成', '注意你身体的感受——当你用新框架思考时，是否更轻松了？反复强化这个新视角，它会逐渐成为你的默认反应。');
 }
@@ -1747,12 +1877,40 @@ function renderReframeLab() {
 // ====== 工具4：感知位置轮盘 ======
 function renderPerceptualWheel() {
   const steps = [
-    { title: '第一位置：你自己', desc: '回忆一个让你困扰的冲突场景。从你的角度描述：我感到什么？因为什么？我希望什么？', input: true, placeholder: '我感到...因为...我希望...' },
-    { title: '第二位置：对方', desc: '现在想象自己变成了对方。从对方的角度看这件事：他/她感到什么？因为什么？希望什么？', input: true, placeholder: '他/她感到...因为...希望...' },
-    { title: '第三位置：旁观者', desc: '作为一个中立的旁观者，客观地看这两个人。你看到了什么他们各自没看到的东西？', input: true, placeholder: '我看到两个人各自有合理的需要，但...' },
-    { title: '整合智慧', desc: '带着第三位置的洞察回到你自己：现在你会怎么做？你对对方的理解有什么变化？', input: true, placeholder: '我现在会...' },
+    { title: '第一位置：你自己', desc: '回忆一个让你困扰的冲突场景。从你的角度描述：我感到什么？因为什么？我希望什么？', input: true, placeholder: '我感到...因为...我希望...', hint: '例如：我感到很委屈，因为我已经解释了很多遍但他还是不信我。我希望他能听我说完。' },
+    { title: '第二位置：对方', desc: '现在想象自己变成了对方。从对方的角度看这件事：他/她感到什么？因为什么？希望什么？', input: true, placeholder: '他/她感到...因为...希望...', hint: '试着真的"变成"那个人，用他/她的语气写。例如：我感到着急，因为这件事拖了很久，我希望尽快有个结论。' },
+    { title: '第三位置：旁观者', desc: '作为一个中立的旁观者，客观地看这两个人。你看到了什么他们各自没看到的东西？', input: true, placeholder: '我看到两个人各自有合理的需要，但...', hint: '想象你是一个聪明的第三方顾问。例如：两个人其实想要同一个结果，只是在用不同的方式表达。' },
+    { title: '整合智慧', desc: '带着第三位置的洞察回到你自己：现在你会怎么做？你对对方的理解有什么变化？', input: true, placeholder: '我现在会...', hint: '例如：我会先承认他的着急，然后提出一个我们都能接受的时间表。我发现他不是不信我，是太焦虑了。' },
   ];
   return renderGuidedTool('perceptualWheel', steps, '视角整合完成', '感知位置切换的核心是：当你真正站到对方的位置时，很多愤怒会自然消解。这不是原谅对方，而是释放自己。');
+}
+
+// 感知位置轮盘汇总输出
+function show_perceptualWheel_summary(data, steps, title, msg) {
+  const labels = ['🧑 第一位置（你自己）', '👥 第二位置（对方）', '👁️ 第三位置（旁观者）', '✨ 整合智慧'];
+  return `
+    <div class="result-card">
+      <div class="result-icon">🔄</div>
+      <h4>✅ ${title}</h4>
+      <div class="result-desc" style="margin-bottom:20px;">${msg}</div>
+      <div style="text-align:left;">
+        <div style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:16px;text-align:center;">📋 你的感知位置练习汇总</div>
+        ${labels.map((label, i) => {
+          const content = data[i] || '(未填写)';
+          return `
+            <div style="background:var(--bg-card);border-radius:12px;padding:16px;margin-bottom:12px;border-left:4px solid var(--primary-light);box-shadow:var(--shadow-sm);">
+              <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;">${label}</div>
+              <div style="font-size:14px;color:var(--text-secondary);line-height:1.7;white-space:pre-wrap;">${content}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      <div style="padding:16px;background:linear-gradient(135deg,#F0FFF4,#E6FFFA);border-radius:12px;margin:16px 0;">
+        <p style="font-size:14px;color:#276749;line-height:1.7;">💡 <strong>建议：</strong>把这份汇总截图保存。下次再遇到类似冲突时翻出来看看——你会发现自己已经拥有了多角度智慧。</p>
+      </div>
+      <button class="btn btn-secondary" onclick="closeToolPanel()">完成</button>
+    </div>
+  `;
 }
 
 // ====== 工具5：信念检测器 ======
@@ -1820,6 +1978,141 @@ function saveNewBelief() {
       <h4>✅ 信念已更新</h4>
       <p style="font-size:15px">旧信念已被新的、更准确的表述替代：<br><strong style="color:var(--primary)">${newBelief}</strong></p>
       <p style="font-size:13px;color:var(--text-secondary);margin-top:12px">建议你在接下来一周里，每次旧信念出现时，立刻用新信念替换它。重复21天，新的思维模式就会成为习惯。</p>
+    </div>
+  `;
+}
+
+// ====== 工具5b：信念转换器 ======
+function renderBeliefConverter() {
+  return `
+    <div id="beliefConverterApp">
+      <p style="font-size:15px;color:var(--text-secondary);margin-bottom:8px;">输入你脑海中那句困住你的话，系统会基于NLP换框法和语言魔术（Sleight of Mouth）自动帮你转换。</p>
+      <div style="font-size:13px;color:var(--text-light);margin-bottom:20px;">💡 不知道怎么写？试试这些：「我永远学不好英语」「没有人会理解我」「我这辈子就这样了」</div>
+      <textarea id="converterInput" style="width:100%;min-height:80px;padding:16px;border:2px solid var(--border);border-radius:12px;font-size:14px;font-family:inherit;resize:vertical;margin-bottom:20px;" placeholder="例如：我永远学不好英语"></textarea>
+      <button class="btn btn-primary" style="width:100%" onclick="convertBelief()">转换信念 →</button>
+      <div id="converterResult" style="display:none;margin-top:24px"></div>
+    </div>
+  `;
+}
+
+function initBeliefConverter() {}
+
+function convertBelief() {
+  const input = document.getElementById('converterInput').value.trim();
+  if (!input) return;
+
+  // NLP换框规则库
+  const rules = [
+    { match: /永远|总是|从不|从来不|从来不曾/, fix: b => b.replace(/永远|总是/g,'目前').replace(/从不/g,'还没有'), reason: '「永远/总是」是泛化——把时间从"永恒"缩小到"目前"，就有了改变的空间。' },
+    { match: /什么都|什么也|一切/, fix: b => b.replace(/什么都|什么也/g,'有些方面').replace(/一切/g,'部分'), reason: '「什么都」是删减——并非什么都做不好，只是某些方面还需要加强。' },
+    { match: /太笨|太蠢|太差|没天赋|不行/, fix: b => b.replace(/太笨|太蠢/g,'还在学习中').replace(/太差/g,'还有提升空间').replace(/没天赋/g,'还没找到适合我的方法').replace(/不行/g,'还没找到方法'), reason: '「笨/差/不行」是人格等价——把行为表现等同于人格。你≠你的表现。' },
+    { match: /没有人|没人|谁都不/, fix: b => b.replace(/没有人|没人/g,'不是所有人').replace(/谁都不/g,'暂时还没遇到对的人'), reason: '「没有人」是泛化——否定所有可能性。只需要一个对的人就够了。' },
+    { match: /做不到|不可能|没办法/, fix: b => b.replace(/做不到/g,'还没找到方法做到').replace(/不可能/g,'目前看起来有难度，但不是不可能').replace(/没办法/g,'还没找到合适的办法'), reason: '「做不到」是因果删减——把"还没做到"等同于"永远做不到"。' },
+    { match: /完了|毁了|没救了|全完了/, fix: b => b.replace(/完了|全完了/g,'遇到了一个挫折').replace(/毁了/g,'需要调整方向').replace(/没救了/g,'需要换个方法'), reason: '「完了」是灾难化——把一个挫折放大成终局。挫折是信息，不是终局。' },
+    { match: /没用|没意义|没意思/, fix: b => b.replace(/没用/g,'效果还不明显').replace(/没意义/g,'我还没找到它的意义').replace(/没意思/g,'暂时提不起兴趣'), reason: '「没意义」是删减——意义不是发现的，是创造的。先行动，意义会浮现。' },
+    { match: /不应该|不能|不可以/, fix: b => b.replace(/不应该/g,'可以选择不').replace(/不能/g,'可以暂时不').replace(/不可以/g,'有其他选择'), reason: '「不应该」是规则扭曲——把"选择"变成"禁令"。你有选择权。' },
+    { match: /必须|一定|非得/, fix: b => b.replace(/必须/g,'更希望').replace(/一定/g,'倾向于').replace(/非得/g,'优先选择'), reason: '「必须」是绝对化——制造虚假的紧迫感。很少有事情是"必须"的。' },
+    { match: /别人都|大家都|所有人都/, fix: b => b.replace(/别人都|大家都/g,'有些人').replace(/所有人都/g,'部分人'), reason: '「别人都」是虚假比较——你看到的"别人"只是幸存者偏差。' },
+  ];
+
+  let converted = input;
+  let appliedRules = [];
+  for (const r of rules) {
+    if (r.match.test(converted)) {
+      const before = converted;
+      converted = r.fix(converted);
+      if (before !== converted) appliedRules.push(r);
+    }
+  }
+
+  // 如果没有匹配到任何规则，用通用换框
+  if (appliedRules.length === 0) {
+    converted = input.replace(/我/g,'我正在学习').replace(/是/g,'暂时是') + '，但这不是终点。';
+    appliedRules.push({ reason: '通用换框：在原句基础上加入"正在"和"暂时"，把固定状态变为过程。' });
+  }
+
+  // 生成3个不同角度的转换版本
+  const versions = [
+    { label: '🎯 精确化版本', text: converted, method: '元模型精确化：把泛化词替换为具体、可验证的表述。' },
+    { label: '🔄 换框版本', text: input.replace(/永远|总是/g,'有时候').replace(/做不到|不行/g,'还在学习中').replace(/太笨|太差/g,'有提升空间') + '——这只是一个阶段，不是终点。', method: '意义换框：改变事件的意义框架，从"终局"变为"阶段"。' },
+    { label: '💪 赋能版本', text: `虽然${input.replace(/我/g,'').replace(/永远|总是/g,'暂时')}，但我选择相信改变是可能的，今天我迈出一小步。`, method: '行为换框：承认现状的同时加入行动意图和选择权。' },
+  ];
+
+  document.getElementById('converterResult').style.display = 'block';
+  document.getElementById('converterResult').innerHTML = `
+    <div class="result-card">
+      <div class="result-icon">🔄</div>
+      <h4>信念转换结果</h4>
+      <div style="background:#fdf0f0;padding:14px 16px;border-radius:8px;margin-bottom:20px;border-left:4px solid #c97a7a;">
+        <div style="font-size:13px;color:#c97a7a;margin-bottom:4px;">原始限制性信念：</div>
+        <div style="font-size:15px;color:#c97a7a;font-weight:600;">"${input}"</div>
+      </div>
+      ${versions.map((v,i) => `
+        <div style="background:#f0f9f0;padding:16px;border-radius:8px;margin-bottom:14px;border-left:4px solid #6faa7a;">
+          <div style="font-size:14px;font-weight:700;color:#3a6f3a;margin-bottom:8px;">${v.label}</div>
+          <div style="font-size:15px;color:#3a6f3a;font-weight:600;line-height:1.7;margin-bottom:8px;">"${v.text}"</div>
+          <div style="font-size:12px;color:var(--text-light);">💡 ${v.method}</div>
+        </div>
+      `).join('')}
+      <div style="padding:16px;background:var(--bg-soft);border-radius:8px;margin-bottom:16px;">
+        <div style="font-weight:700;color:var(--primary);margin-bottom:8px;">📊 检测到的语言模式：</div>
+        ${appliedRules.map(r => `<div style="font-size:13px;color:var(--text-secondary);padding:4px 0;">• ${r.reason}</div>`).join('')}
+      </div>
+      <div style="padding:16px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border-radius:8px;margin-bottom:16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px;">📌 选择一个最打动你的版本，抄下来：</div>
+        <textarea id="chosenBelief" style="width:100%;min-height:60px;padding:12px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;" placeholder="把你选中的那句话抄在这里…"></textarea>
+        <button class="btn btn-primary" style="margin-top:12px;width:100%;" onclick="saveConvertedBelief()">保存为我的新信念</button>
+      </div>
+      <div id="convertedBeliefResult"></div>
+      <button class="btn btn-secondary" style="margin-top:12px" onclick="closeToolPanel()">完成</button>
+    </div>
+  `;
+}
+
+function saveConvertedBelief() {
+  const text = document.getElementById('chosenBelief').value.trim();
+  if (!text) return;
+  document.getElementById('convertedBeliefResult').innerHTML = `
+    <div class="guided-result">
+      <h4>✅ 新信念已保存</h4>
+      <p style="font-size:15px"><strong style="color:var(--primary)">${text}</strong></p>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:12px">把这句话写在手机备忘录里，设置成壁纸，或者贴在镜子上。每当旧信念冒出来，立刻用这句替换它。21天后，你的大脑会自动运行这个新程序。</p>
+    </div>
+  `;
+}
+
+// ====== 工具5c：20种信念对照表 ======
+function renderBeliefList() {
+  return `
+    <div>
+      <p style="font-size:15px;color:var(--text-secondary);margin-bottom:24px;">这是最常见的20种限制性信念，以及NLP换框后的赋能版本。看看你中了哪几条？</p>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        ${beliefComparisons.map((b,i) => `
+          <div style="background:var(--bg-card);border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm);">
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg-soft);">
+              <span style="font-size:14px;font-weight:700;color:var(--text-light);">#${i+1}</span>
+            </div>
+            <div style="padding:12px 16px;">
+              <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;">
+                <span style="background:#fdf0f0;color:#c97a7a;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;">限制性</span>
+                <span style="font-size:14px;color:#c97a7a;line-height:1.6;">${b.limiting}</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <span style="background:#f0f9f0;color:#6faa7a;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;">赋能</span>
+                <span style="font-size:14px;color:#3a6f3a;line-height:1.6;font-weight:500;">${b.empowering}</span>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="padding:20px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border-radius:12px;margin-top:24px;text-align:center;">
+        <p style="font-size:15px;color:var(--primary);font-weight:600;margin-bottom:8px;">💡 发现自己有这些限制性信念？</p>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">用「信念检测器」深入分析，或用「信念转换器」自动转换</p>
+        <div style="display:flex;gap:10px;justify-content:center;">
+          <button class="btn btn-primary" style="padding:10px 20px;font-size:14px;" onclick="openToolPanel('belief_detector','信念检测器','🔍')">去检测</button>
+          <button class="btn btn-secondary" style="padding:10px 20px;font-size:14px;" onclick="openToolPanel('belief_converter','信念转换器','🔄')">去转换</button>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -1945,13 +2238,45 @@ function sendChatMessage() {
 // ====== 工具8：目标锚定器 ======
 function renderGoalAligner() {
   const steps = [
-    { title: '第一层：身份', desc: '你想成为一个什么样的人？（不是做什么，而是"是谁"）', input: true, placeholder: '例如：一个终身学习者 / 一个有创造力的人' },
-    { title: '第二层：信念/价值观', desc: '成为这样的人，你需要相信什么？什么对你最重要？', input: true, placeholder: '例如：相信成长比成绩重要、重视好奇心' },
-    { title: '第三层：能力', desc: '你需要发展什么能力来支持上面的信念？', input: true, placeholder: '例如：专注力、时间管理、批判性思维' },
-    { title: '第四层：行为', desc: '你每天具体要做什么？', input: true, placeholder: '例如：每天阅读30分钟、做错题分析' },
-    { title: '第五层：环境', desc: '你需要什么资源和环境支持？', input: true, placeholder: '例如：安静的书桌、学习伙伴、图书馆' },
+    { title: '第一层：身份', desc: '你想成为一个什么样的人？（不是做什么，而是"是谁"）', input: true, placeholder: '例如：一个终身学习者 / 一个有创造力的人', hint: '身份不是职业，是存在状态。例如不是"程序员"，而是"用技术解决问题的人"。' },
+    { title: '第二层：信念/价值观', desc: '成为这样的人，你需要相信什么？什么对你最重要？', input: true, placeholder: '例如：相信成长比成绩重要、重视好奇心', hint: '信念是你深信不疑的东西。例如：我相信每个人都有无限可能。价值观是你做选择的优先级。' },
+    { title: '第三层：能力', desc: '你需要发展什么能力来支持上面的信念？', input: true, placeholder: '例如：专注力、时间管理、批判性思维', hint: '能力是"能做什么"，不是"做什么"。例如不是"写代码"，而是"系统化思维能力"。' },
+    { title: '第四层：行为', desc: '你每天具体要做什么？', input: true, placeholder: '例如：每天阅读30分钟、做错题分析', hint: '行为要具体、可执行、可衡量。越具体越好——"每天早上7点读20页书"比"多读书"有效100倍。' },
+    { title: '第五层：环境', desc: '你需要什么资源和环境支持？', input: true, placeholder: '例如：安静的书桌、学习伙伴、图书馆', hint: '环境包括人、地、物。谁能帮你？去哪里做？需要什么工具？' },
   ];
   return renderGuidedTool('goalAligner', steps, '目标已对齐', '当五个层次从"我是谁"到"我在哪里做什么"完全一致时，你会感到一种内在的贯通感——不纠结、不内耗，行动自然有力量。');
+}
+
+// 目标锚定器汇总输出
+function show_goalAligner_summary(data, steps, title, msg) {
+  const labels = ['🏔️ 身份（我是谁）', '💎 信念/价值观（我相信什么）', '🛠️ 能力（我能做什么）', '🏃 行为（我每天做什么）', '🌍 环境（我在哪里、用什么）'];
+  const colors = ['#b86a4a', '#9b7faa', '#7aa89f', '#6faa7a', '#d4896a'];
+  return `
+    <div class="result-card">
+      <div class="result-icon">🏔️</div>
+      <h4>✅ ${title}</h4>
+      <div class="result-desc" style="margin-bottom:20px;">${msg}</div>
+      <div style="text-align:left;">
+        <div style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:16px;text-align:center;">📋 你的逻辑层次对齐图</div>
+        ${labels.map((label, i) => {
+          const content = data[i] || '(未填写)';
+          return `
+            <div style="background:var(--bg-card);border-radius:12px;padding:16px;margin-bottom:10px;border-left:4px solid ${colors[i]};box-shadow:var(--shadow-sm);">
+              <div style="font-size:14px;font-weight:700;color:${colors[i]};margin-bottom:8px;">${label}</div>
+              <div style="font-size:14px;color:var(--text-secondary);line-height:1.7;white-space:pre-wrap;">${content}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      <div style="padding:16px;background:linear-gradient(135deg,#F0FFF4,#E6FFFA);border-radius:12px;margin:16px 0;">
+        <p style="font-size:14px;color:#276749;line-height:1.7;">💡 <strong>检查对齐度：</strong>从上往下看，每一层是否支持上一层？如果身份是"终身学习者"但行为是"每天刷手机4小时"——就不对齐，需要调整行为层。</p>
+      </div>
+      <div style="padding:16px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border-radius:12px;margin-bottom:16px;">
+        <p style="font-size:14px;color:var(--primary);font-weight:600;">📌 把这份对齐图截图保存，设为手机壁纸或贴在书桌前。每天看一眼，检查自己的行为是否还在轨道上。</p>
+      </div>
+      <button class="btn btn-secondary" onclick="closeToolPanel()">完成</button>
+    </div>
+  `;
 }
 
 // ====== 工具9：情绪释放引导 ======
@@ -2060,7 +2385,7 @@ function saveJournal() {
 function renderGuidedTool(id, steps, completeTitle, completeMsg) {
   window[`${id}Steps`] = steps;
   window[`${id}Current`] = 0;
-  window[`${id}Data`] = [];
+  window[`${id}Data`] = {};
   return `
     <div id="${id}App">
       <div id="${id}Steps">
@@ -2068,7 +2393,8 @@ function renderGuidedTool(id, steps, completeTitle, completeMsg) {
           <div class="guided-step ${i === 0 ? 'active' : ''}" data-step="${i}">
             <h4>${s.title}</h4>
             <p>${s.desc}</p>
-            ${s.input ? `<textarea class="guided-input" data-step="${i}" placeholder="${s.placeholder||''}" style="width:100%;min-height:100px;padding:16px;border:2px solid var(--border);border-radius:12px;font-size:14px;font-family:inherit;resize:vertical"></textarea>` : ''}
+            ${s.hint ? `<div style="font-size:13px;color:var(--text-light);padding:8px 12px;background:var(--bg-soft);border-radius:8px;margin-bottom:12px;">💡 ${s.hint}</div>` : ''}
+            ${s.input ? `<textarea class="guided-input" data-step="${i}" data-id="${id}" placeholder="${s.placeholder||''}" style="width:100%;min-height:100px;padding:16px;border:2px solid var(--border);border-radius:12px;font-size:14px;font-family:inherit;resize:vertical"></textarea>` : ''}
             ${s.options ? `<div class="assessment-options">${s.options.map(o => `<div class="assessment-option" onclick="this.parentNode.querySelectorAll('.assessment-option').forEach(e=>e.classList.remove('selected'));this.classList.add('selected')"><div class="radio"></div>${o}</div>`).join('')}</div>` : ''}
             ${s.info ? `<div style="padding:20px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border-radius:12px;font-size:14px;color:var(--primary)"><strong>练习提示：</strong>找一个安静的地方，闭上眼睛，花2-3分钟充分体验这一步的感受。准备好后点击"下一步"。</div>` : ''}
             <div class="guided-nav">
@@ -2086,33 +2412,69 @@ function renderGuidedTool(id, steps, completeTitle, completeMsg) {
 function guidedNext(id) {
   const steps = window[`${id}Steps`];
   let current = window[`${id}Current`];
+  // 保存当前步骤的输入
+  const currentStep = document.querySelector(`#${id}App .guided-step[data-step="${current}"]`);
+  const textarea = currentStep.querySelector('textarea');
+  if (textarea) window[`${id}Data`][current] = textarea.value;
+  const selectedOption = currentStep.querySelector('.assessment-option.selected');
+  if (selectedOption) window[`${id}Data`]['option_'+current] = selectedOption.textContent.trim();
+  // 切换
   const stepEls = document.querySelectorAll(`#${id}App .guided-step`);
   stepEls[current].classList.remove('active');
   current++;
   window[`${id}Current`] = current;
   stepEls[current].classList.add('active');
+  // 恢复已有输入
+  const newStep = document.querySelector(`#${id}App .guided-step[data-step="${current}"]`);
+  const newTextarea = newStep.querySelector('textarea');
+  if (newTextarea && window[`${id}Data`][current]) newTextarea.value = window[`${id}Data`][current];
 }
 
 function guidedPrev(id) {
   let current = window[`${id}Current`];
+  // 保存当前步骤的输入
+  const currentStep = document.querySelector(`#${id}App .guided-step[data-step="${current}"]`);
+  const textarea = currentStep.querySelector('textarea');
+  if (textarea) window[`${id}Data`][current] = textarea.value;
   const stepEls = document.querySelectorAll(`#${id}App .guided-step`);
   stepEls[current].classList.remove('active');
   current--;
   window[`${id}Current`] = current;
   stepEls[current].classList.add('active');
+  // 恢复已有输入
+  const newStep = document.querySelector(`#${id}App .guided-step[data-step="${current}"]`);
+  const newTextarea = newStep.querySelector('textarea');
+  if (newTextarea && window[`${id}Data`][current]) newTextarea.value = window[`${id}Data`][current];
 }
 
 function guidedComplete(id, title, msg) {
+  // 保存最后一步的输入
+  const current = window[`${id}Current`];
+  const currentStep = document.querySelector(`#${id}App .guided-step[data-step="${current}"]`);
+  if (currentStep) {
+    const textarea = currentStep.querySelector('textarea');
+    if (textarea) window[`${id}Data`][current] = textarea.value;
+    const selectedOption = currentStep.querySelector('.assessment-option.selected');
+    if (selectedOption) window[`${id}Data`]['option_'+current] = selectedOption.textContent.trim();
+  }
+
   const resultEl = document.getElementById(`${id}Result`);
   document.getElementById(`${id}Steps`).style.display = 'none';
   resultEl.style.display = 'block';
-  resultEl.innerHTML = `
-    <div class="guided-result">
-      <h4>✅ ${title}</h4>
-      <p style="font-size:15px;color:var(--text-secondary);line-height:1.8">${msg}</p>
-      <button class="btn btn-secondary" style="margin-top:20px" onclick="closeToolPanel()">返回工具列表</button>
-    </div>
-  `;
+
+  // 检查是否有自定义汇总函数
+  const summaryFn = window[`show_${id}_summary`];
+  if (typeof summaryFn === 'function') {
+    resultEl.innerHTML = summaryFn(window[`${id}Data`], window[`${id}Steps`], title, msg);
+  } else {
+    resultEl.innerHTML = `
+      <div class="guided-result">
+        <h4>✅ ${title}</h4>
+        <p style="font-size:15px;color:var(--text-secondary);line-height:1.8">${msg}</p>
+        <button class="btn btn-secondary" style="margin-top:20px" onclick="closeToolPanel()">返回工具列表</button>
+      </div>
+    `;
+  }
 }
 
 // 初始化引导工具的函数占位

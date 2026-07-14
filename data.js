@@ -526,9 +526,37 @@ const interactiveTools = [
   { id:"reframe_lab", title:"换框练习器", icon:"🖼️", desc:"把负面想法翻转成积极视角", type:"guided" },
   { id:"perceptual_wheel", title:"感知位置轮盘", icon:"🔄", desc:"三把椅子三种视角，化解人际冲突", type:"guided" },
   { id:"belief_detector", title:"信念检测器", icon:"🔍", desc:"用元模型破解'我做不到'类限制性信念", type:"assessment" },
+  { id:"belief_converter", title:"信念转换器", icon:"🔄", desc:"输入限制性信念，自动转换为赋能信念", type:"assessment" },
+  { id:"belief_list", title:"20种信念对照表", icon:"📋", desc:"最常见的20种限制性vs赋能信念对比", type:"reference" },
   { id:"timeline_visual", title:"时间线可视化", icon:"📅", desc:"绘制你的个人时间线，释放过去", type:"canvas" },
   { id:"self_talk", title:"自我对话模拟器", icon:"💬", desc:"练习NLP式的积极自我对话", type:"chat" },
   { id:"goal_aligner", title:"目标锚定器", icon:"🏔️", desc:"用逻辑层次模型设定对齐的目标", type:"guided" },
   { id:"emotion_release", title:"情绪释放引导", icon:"🌊", desc:"引导式逐步抽离，从情绪中退后一步", type:"guided" },
   { id:"growth_journal", title:"每日成长日记", icon:"📓", desc:"NLP格式日记，记录每日成长", type:"journal" }
+];
+
+// ------------------------------------------------------------
+// 8. 20种常见限制性信念 vs 赋能信念对照表
+// ------------------------------------------------------------
+const beliefComparisons = [
+  { limiting:"我永远学不好这个。", empowering:"这个知识点我还需要多练习，上次XX部分我就做得不错。" },
+  { limiting:"我太笨了，什么都做不好。", empowering:"我正在学习，每个人节奏不同，我已经在进步了。" },
+  { limiting:"没有人会喜欢我。", empowering:"不是所有人都会喜欢我，但真正懂我的人会留下。" },
+  { limiting:"我做不到的，别试了。", empowering:"我还没找到方法，不代表做不到，先试试再说。" },
+  { limiting:"一切都是我的错。", empowering:"这件事我有部分责任，但也有很多因素不在我的控制范围内。" },
+  { limiting:"如果我失败了，就全完了。", empowering:"失败是反馈信息，告诉我这条路需要调整，不是终点。" },
+  { limiting:"我不够好，配不上好的。", empowering:"我的价值不取决于某一次表现，我值得被善待。" },
+  { limiting:"改变太难了，我不可能改变。", empowering:"改变不需要一步到位，今天做一点就是开始。" },
+  { limiting:"别人都比我强，我比不上。", empowering:"每个人都有自己的节奏和优势，我只需要和昨天的自己比。" },
+  { limiting:"过去的事情决定了我的现在。", empowering:"过去影响了我，但不定义我，我此刻可以选择不同的回应。" },
+  { limiting:"我必须完美，否则就是失败。", empowering:"完成比完美更重要，60分的行动比0分的空想有价值。" },
+  { limiting:"表达需求就是自私。", empowering:"表达需求是健康的自我尊重，压抑才会出问题。" },
+  { limiting:"我不能犯错。", empowering:"犯错是学习的必经之路，不犯错说明没在尝试新东西。" },
+  { limiting:"我天生就是这样的，改不了。", empowering:"性格可以调整，习惯可以重建，大脑是可塑的。" },
+  { limiting:"如果我放松了，一切都会崩塌。", empowering:"适当休息不会让事情变糟，反而能让我更有能量应对。" },
+  { limiting:"没有人能理解我。", empowering:"也许我还没遇到对的人，也许我需要先学会表达自己。" },
+  { limiting:"我这辈子就这样了。", empowering:"人生很长，转折随时可能发生，只要我不放弃探索。" },
+  { limiting:"别人怎么看我最重要。", empowering:"别人怎么看是别人的事，我怎么看自己才决定我的生活质量。" },
+  { limiting:"我不值得被爱。", empowering:"被爱不需要条件，我先爱自己，才会吸引对的人。" },
+  { limiting:"努力也没用，结果不会变。", empowering:"结果不是我能完全控制的，但努力本身已经在改变我。" }
 ];
