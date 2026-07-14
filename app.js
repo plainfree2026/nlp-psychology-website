@@ -1131,6 +1131,8 @@ function renderGuidedTool(id, steps, completeTitle, completeMsg) {
   window[`${id}Steps`] = steps;
   window[`${id}Current`] = 0;
   window[`${id}Data`] = {};
+  window[`${id}Title`] = completeTitle;
+  window[`${id}Msg`] = completeMsg;
   return `
     <div id="${id}App">
       <div id="${id}Steps">
@@ -1144,7 +1146,7 @@ function renderGuidedTool(id, steps, completeTitle, completeMsg) {
             ${s.info ? `<div style="padding:20px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border-radius:12px;font-size:14px;color:var(--primary)"><strong>练习提示：</strong>找一个安静的地方，闭上眼睛，花2-3分钟充分体验这一步的感受。准备好后点击"下一步"。</div>` : ''}
             <div class="guided-nav">
               ${i > 0 ? `<button class="btn btn-secondary" onclick="guidedPrev('${id}')">← 上一步</button>` : '<div></div>'}
-              ${i < steps.length - 1 ? `<button class="btn btn-primary" onclick="guidedNext('${id}')">下一步 →</button>` : `<button class="btn btn-primary" onclick="guidedComplete('${id}','${completeTitle}','${completeMsg}')">完成 ✓</button>`}
+              ${i < steps.length - 1 ? `<button class="btn btn-primary" onclick="guidedNext('${id}')">下一步 →</button>` : `<button class="btn btn-primary" onclick="guidedComplete('${id}')">完成 ✓</button>`}
             </div>
           </div>
         `).join('')}
@@ -1192,33 +1194,48 @@ function guidedPrev(id) {
   if (newTextarea && window[`${id}Data`][current]) newTextarea.value = window[`${id}Data`][current];
 }
 
-function guidedComplete(id, title, msg) {
-  // 保存最后一步的输入
-  const current = window[`${id}Current`];
-  const currentStep = document.querySelector(`#${id}App .guided-step[data-step="${current}"]`);
-  if (currentStep) {
-    const textarea = currentStep.querySelector('textarea');
-    if (textarea) window[`${id}Data`][current] = textarea.value;
-    const selectedOption = currentStep.querySelector('.assessment-option.selected');
-    if (selectedOption) window[`${id}Data`]['option_'+current] = selectedOption.textContent.trim();
-  }
+function guidedComplete(id) {
+  try {
+    // 从 window 变量读取标题和消息
+    const title = window[`${id}Title`] || '完成';
+    const msg = window[`${id}Msg`] || '';
 
-  const resultEl = document.getElementById(`${id}Result`);
-  document.getElementById(`${id}Steps`).style.display = 'none';
-  resultEl.style.display = 'block';
+    // 保存最后一步的输入
+    const current = window[`${id}Current`];
+    const currentStep = document.querySelector(`#${id}App .guided-step[data-step="${current}"]`);
+    if (currentStep) {
+      const textarea = currentStep.querySelector('textarea');
+      if (textarea) window[`${id}Data`][current] = textarea.value;
+      const selectedOption = currentStep.querySelector('.assessment-option.selected');
+      if (selectedOption) window[`${id}Data`]['option_'+current] = selectedOption.textContent.trim();
+    }
 
-  // 检查是否有自定义汇总函数
-  const summaryFn = window[`show_${id}_summary`];
-  if (typeof summaryFn === 'function') {
-    resultEl.innerHTML = summaryFn(window[`${id}Data`], window[`${id}Steps`], title, msg);
-  } else {
-    resultEl.innerHTML = `
-      <div class="guided-result">
-        <h4>✅ ${title}</h4>
-        <p style="font-size:15px;color:var(--text-secondary);line-height:1.8">${msg}</p>
-        <button class="btn btn-secondary" style="margin-top:20px" onclick="closeToolPanel()">返回工具列表</button>
-      </div>
-    `;
+    const resultEl = document.getElementById(`${id}Result`);
+    if (!resultEl) { console.error('Result element not found:', id+'Result'); return; }
+    const stepsEl = document.getElementById(`${id}Steps`);
+    if (stepsEl) stepsEl.style.display = 'none';
+    resultEl.style.display = 'block';
+
+    // 检查是否有自定义汇总函数
+    const summaryFn = window[`show_${id}_summary`];
+    if (typeof summaryFn === 'function') {
+      resultEl.innerHTML = summaryFn(window[`${id}Data`], window[`${id}Steps`], title, msg);
+    } else {
+      resultEl.innerHTML = `
+        <div class="guided-result">
+          <h4>✅ ${title}</h4>
+          <p style="font-size:15px;color:var(--text-secondary);line-height:1.8">${msg}</p>
+          <button class="btn btn-secondary" style="margin-top:20px" onclick="closeToolPanel()">返回工具列表</button>
+        </div>
+      `;
+    }
+  } catch(err) {
+    console.error('guidedComplete error:', err);
+    const resultEl = document.getElementById(`${id}Result`);
+    if (resultEl) {
+      resultEl.style.display = 'block';
+      resultEl.innerHTML = `<div class="guided-result"><h4>⚠️ 出了点问题</h4><p style="font-size:14px;color:var(--text-secondary)">${err.message}</p><button class="btn btn-secondary" style="margin-top:16px" onclick="closeToolPanel()">关闭</button></div>`;
+    }
   }
 }
 
